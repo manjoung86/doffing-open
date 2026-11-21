@@ -136,6 +136,8 @@
   .chips button.open { box-shadow: inset 0 0 0 2px var(--accent), var(--raise-sm); }
   .chips button.on { background: var(--accent-face); color: var(--on-accent); }
   .row .unit { width: 50px; flex: none; font-size: 15px; color: var(--text-muted); }
+  .wrow .unit { width: auto; min-width: 14px; }
+  .wrow #den { flex: 0 0 31%; }
   .row .start { flex: 1; min-width: 0; text-align: right; font-size: clamp(16px, 5.4vw, 22px); font-weight: 600; white-space: nowrap; }
   .row input[type="time"] {
     flex: 1; min-width: 0;
@@ -248,6 +250,13 @@
           <button type="button" class="mcempty" id="mcEmpty">호기 이름을 먼저 넣어 주세요 (호기 설정)</button>
           <div class="chips sub" id="mcSub"></div>
         </div>
+      </div>
+      <div class="row wrow">
+        <span class="name">무게</span>
+        <input type="text" id="wgt" inputmode="decimal" autocomplete="off" placeholder="0">
+        <span class="unit">g</span>
+        <input type="text" id="den" inputmode="decimal" autocomplete="off" placeholder="0">
+        <span class="unit">D</span>
       </div>
       <label class="row">
         <span class="name">길이</span>
@@ -535,7 +544,7 @@ function renderRuns() {
     el.classList.add('s' + Math.min(i, 3));   // 임박한 맨 위만 크게, 뒤로 갈수록 작게
     el.classList.toggle('open', r === openRun);
     el.querySelector('.rname').textContent = r.name;
-    el.querySelector('.rinfo').textContent = r.len + ' m · ' + hm(new Date(r.startMs)) + ' 시작' + (r.endMs0 ? ' · 중량 보정 ' + shiftText(r.endMs0, r.endMs) : '');
+    el.querySelector('.rinfo').textContent = (r.den ? r.target + ' g · ' + r.den + 'D · ' : '') + r.len + ' m · ' + hm(new Date(r.startMs)) + ' 시작' + (r.endMs0 ? ' · 중량 보정 ' + shiftText(r.endMs0, r.endMs) : '');
     return { el, r };
   });
   $('runList').replaceChildren(...cards.map(c => c.el));
@@ -594,7 +603,20 @@ $('mcSub').addEventListener('click', e => {
   openGroup = '';
   renderMachines();
 });
-$('len').addEventListener('input', () => { formatField($('len')); tick(); });
+// 무게(g)·데니어로 길이 채우기: 데니어는 9,000 m 의 무게(g)이므로 길이(m) = 무게 × 9,000 ÷ 데니어. 데니어는 마지막 값을 기억한다
+function fillLen() {
+  const g = parseNum($('wgt').value), d = parseNum($('den').value);
+  if (g > 0 && d > 0) $('len').value = withCommas(String(Math.round(g * 9000 / d)));
+  tick();
+}
+try { const d = localStorage.getItem('open.doff.denier'); if (d) $('den').value = withCommas(d); } catch (e) {}
+$('wgt').addEventListener('input', () => { formatField($('wgt')); fillLen(); });
+$('den').addEventListener('input', () => {
+  formatField($('den'));
+  if (parseNum($('den').value) > 0) { try { localStorage.setItem('open.doff.denier', $('den').value.replace(/,/g, '')); } catch (e) {} }
+  fillLen();
+});
+$('len').addEventListener('input', () => { formatField($('len')); $('wgt').value = ''; tick(); });
 $('spd').addEventListener('input', () => {
   formatField($('spd'));
   if (parseNum($('spd').value) > 0) { try { localStorage.setItem('open.doff.speed', $('spd').value.replace(/,/g, '')); } catch (e) {} }
@@ -613,11 +635,12 @@ $('goBtn').addEventListener('click', () => {
   if (same) ntfyCancel(same.ntfyId);
   runs = runs.filter(r => r !== same);
   openRun = { name, len: $('len').value, spd: $('spd').value, startMs: start.getTime(), endMs: end.getTime() };
+  if (parseNum($('wgt').value) > 0) { openRun.target = $('wgt').value; openRun.den = $('den').value; }   // 중량 점검의 목표 무게로 쓴다
   runs.push(openRun);                 // 방금 시작한 롤은 펼쳐 둔다 (바로 알람을 맞출 수 있게)
   saveRuns();
   selMc = openGroup = '';
   renderMachines();
-  $('len').value = '';              // 같은 값으로 두 번 눌러 롤이 겹쳐 올라가지 않게 비운다
+  $('len').value = $('wgt').value = '';   // 같은 값으로 두 번 눌러 롤이 겹쳐 올라가지 않게 비운다 (데니어는 남긴다)
   if (document.activeElement) document.activeElement.blur();
   renderRuns();                     // 카드를 먼저 새로 만든다 (setManual의 tick이 지워진 롤의 옛 카드를 만지지 않게)
   setManual(false);
