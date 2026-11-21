@@ -210,6 +210,16 @@
   .chkbtns button { flex: 1; height: 48px; border-radius: 14px; font-size: 17px; }
   .chkbtns .cancel { background: var(--key-face); box-shadow: var(--raise-sm); color: var(--text-secondary); }
 
+  /* 기본색 주황 (body.orange). 남은 시간 숫자는 평소 검정으로 두어 임박 표시(빨강)와 헷갈리지 않게 한다 */
+  body.orange {
+    --accent: #e26a00;
+    --accent-face: linear-gradient(rgba(255, 168, 62, 0.97), rgba(238, 116, 16, 0.95));
+    --raise-accent: inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 2px 1px rgba(255, 255, 255, 0.50), 0 1px 2px rgba(120, 60, 10, 0.20), 0 6px 14px rgba(238, 120, 20, 0.35);
+  }
+  body.orange .tabs button.on { background: rgba(238, 120, 20, 0.14); }
+  body.orange .run:not(.soon) .rleft { color: var(--text-primary); }
+  .colorrow { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; font-size: 15px; color: var(--text-secondary); }
+
   /* 호기 설정 */
   .mcempty { display: block; width: 100%; margin-top: 2px; padding: 8px 0; text-align: left; font-size: 15px; color: var(--accent); }
   .mcempty[hidden] { display: none; }
@@ -302,6 +312,13 @@
       </div>
     </details>
     <button type="button" class="card mcset" id="mcSetBtn">호기 설정 (기계 이름 넣기·고치기)</button>
+    <div class="card colorrow">
+      <span>기본색</span>
+      <div class="seg">
+        <button type="button" id="colBlue">파랑</button>
+        <button type="button" id="colOrange">주황</button>
+      </div>
+    </div>
     <template id="runTpl">
       <div class="card run">
         <div class="rtop num">
@@ -675,6 +692,17 @@ document.addEventListener('visibilitychange', tick);
 renderMachines();
 renderRuns();
 tick();
+
+// ── 기본색 (파랑 / 주황) ── 고른 색은 이 폰에 기억한다
+function setColor(c) {
+  document.body.classList.toggle('orange', c === 'orange');
+  $('colBlue').classList.toggle('on', c !== 'orange');
+  $('colOrange').classList.toggle('on', c === 'orange');
+  try { localStorage.setItem('open.color', c); } catch (e) {}
+}
+{ let c = 'blue'; try { c = localStorage.getItem('open.color') || 'blue'; } catch (e) {} setColor(c); }
+$('colBlue').addEventListener('click', () => setColor('blue'));
+$('colOrange').addEventListener('click', () => setColor('orange'));
 
 // ── 호기 설정 ──
 // 쉼표·줄바꿈으로 나눈 이름들을 호기 목록으로 저장한다 (같은 이름은 하나로, 넣은 순서대로)
