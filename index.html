@@ -256,7 +256,7 @@
         <input type="text" id="wgt" inputmode="decimal" autocomplete="off" placeholder="0">
         <span class="unit">g</span>
         <input type="text" id="den" inputmode="decimal" autocomplete="off" placeholder="0">
-        <span class="unit">D</span>
+        <span class="unit">De</span>
       </div>
       <label class="row">
         <span class="name">길이</span>
@@ -552,7 +552,7 @@ function renderRuns() {
     el.classList.add('s' + Math.min(i, 3));   // 임박한 맨 위만 크게, 뒤로 갈수록 작게
     el.classList.toggle('open', r === openRun);
     el.querySelector('.rname').textContent = r.name;
-    el.querySelector('.rinfo').textContent = (r.den ? r.target + ' g · ' + r.den + 'D · ' : '') + r.len + ' m · ' + hm(new Date(r.startMs)) + ' 시작' + (r.endMs0 ? ' · 중량 보정 ' + shiftText(r.endMs0, r.endMs) : '');
+    el.querySelector('.rinfo').textContent = (r.den ? r.target + ' g · ' + r.den + ' De · ' : '') + r.len + ' m · ' + hm(new Date(r.startMs)) + ' 시작' + (r.endMs0 ? ' · 중량 보정 ' + shiftText(r.endMs0, r.endMs) : '');
     return { el, r };
   });
   $('runList').replaceChildren(...cards.map(c => c.el));
