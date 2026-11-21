@@ -23,15 +23,15 @@
     --text-muted: #7f828c;
     --line: rgba(60, 70, 100, 0.12);
     --field: rgba(118, 128, 160, 0.13);
-    --accent: #2a78d6;
+    --accent: #e26a00;   /* 이 공장 판의 기본색은 주황 (그 공장 사장이 골랐다) */
     --on-accent: #ffffff;
     --danger: #d03b3b;
     /* 리퀴드 글래스 느낌: 반투명한 흰 유리 면 + 위쪽 테두리 하이라이트 + 부드러운 그림자. 입력 칸은 안쪽 그림자로 들어가 보이게 */
     --key-face: linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.50));
-    --accent-face: linear-gradient(rgba(92, 164, 255, 0.96), rgba(34, 108, 214, 0.94));
+    --accent-face: linear-gradient(rgba(255, 168, 62, 0.97), rgba(238, 116, 16, 0.95));
     --raise: inset 0 0 0 1px rgba(255, 255, 255, 0.70), inset 0 2px 1px rgba(255, 255, 255, 0.95), 0 1px 2px rgba(30, 40, 70, 0.08), 0 6px 14px rgba(30, 50, 100, 0.13);
     --raise-sm: inset 0 0 0 1px rgba(255, 255, 255, 0.70), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 1px 2px rgba(30, 40, 70, 0.10), 0 3px 7px rgba(30, 50, 100, 0.10);
-    --raise-accent: inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 2px 1px rgba(255, 255, 255, 0.50), 0 1px 2px rgba(20, 60, 120, 0.20), 0 6px 14px rgba(42, 120, 214, 0.35);
+    --raise-accent: inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 2px 1px rgba(255, 255, 255, 0.50), 0 1px 2px rgba(120, 60, 10, 0.20), 0 6px 14px rgba(238, 120, 20, 0.35);
     --card-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.70), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 1px 2px rgba(30, 40, 70, 0.05), 0 8px 20px rgba(30, 50, 100, 0.10);
     --sunk: inset 0 1px 3px rgba(30, 40, 70, 0.16);
     --blur: blur(18px) saturate(180%);
@@ -80,8 +80,8 @@
   .run .rtop > div { flex: 1; min-width: 0; }
   .run .cap { display: block; font-size: 12px; color: var(--text-secondary); }
   .run .rend { font-size: clamp(19px, 6.4vw, 24px); font-weight: 600; letter-spacing: -0.5px; white-space: nowrap; }
-  .run .rleft { font-size: clamp(20px, 6.9vw, 26px); font-weight: 700; letter-spacing: -0.5px; white-space: nowrap; color: var(--accent); }
-  .run.soon .rleft { color: var(--danger); }
+  .run .rleft { font-size: clamp(20px, 6.9vw, 26px); font-weight: 700; letter-spacing: -0.5px; white-space: nowrap; }
+  .run.soon .rleft { color: var(--danger); }   /* 강조색이 주황이라, 평소엔 검정으로 두어 임박(빨강)이 헷갈리지 않게 한다 */
   .run .rbot { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 8px; }
   .run .rinfo { flex: 1 0 100%; min-width: 0; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .run .rbot button { flex: none; height: 34px; padding: 0 12px; border-radius: 9px; background: var(--key-face); box-shadow: var(--raise-sm); font-size: 14px; color: var(--text-secondary); }
@@ -210,16 +210,6 @@
   .chkbtns button { flex: 1; height: 48px; border-radius: 14px; font-size: 17px; }
   .chkbtns .cancel { background: var(--key-face); box-shadow: var(--raise-sm); color: var(--text-secondary); }
 
-  /* 기본색 주황 (body.orange). 남은 시간 숫자는 평소 검정으로 두어 임박 표시(빨강)와 헷갈리지 않게 한다 */
-  body.orange {
-    --accent: #e26a00;
-    --accent-face: linear-gradient(rgba(255, 168, 62, 0.97), rgba(238, 116, 16, 0.95));
-    --raise-accent: inset 0 0 0 1px rgba(255, 255, 255, 0.28), inset 0 2px 1px rgba(255, 255, 255, 0.50), 0 1px 2px rgba(120, 60, 10, 0.20), 0 6px 14px rgba(238, 120, 20, 0.35);
-  }
-  body.orange .tabs button.on { background: rgba(238, 120, 20, 0.14); }
-  body.orange .run:not(.soon) .rleft { color: var(--text-primary); }
-  .colorrow { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; font-size: 15px; color: var(--text-secondary); }
-
   /* 호기 설정 */
   .mcempty { display: block; width: 100%; margin-top: 2px; padding: 8px 0; text-align: left; font-size: 15px; color: var(--accent); }
   .mcempty[hidden] { display: none; }
@@ -239,7 +229,7 @@
     -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
   }
   .tabs button { flex: 1; height: 48px; font-size: 16px; color: var(--text-secondary); border-radius: 999px; }
-  .tabs button.on { background: rgba(42, 120, 214, 0.13); color: var(--accent); font-weight: 700; }
+  .tabs button.on { background: rgba(238, 120, 20, 0.14); color: var(--accent); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -312,13 +302,6 @@
       </div>
     </details>
     <button type="button" class="card mcset" id="mcSetBtn">호기 설정 (기계 이름 넣기·고치기)</button>
-    <div class="card colorrow">
-      <span>기본색</span>
-      <div class="seg">
-        <button type="button" id="colBlue">파랑</button>
-        <button type="button" id="colOrange">주황</button>
-      </div>
-    </div>
     <template id="runTpl">
       <div class="card run">
         <div class="rtop num">
@@ -692,17 +675,6 @@ document.addEventListener('visibilitychange', tick);
 renderMachines();
 renderRuns();
 tick();
-
-// ── 기본색 (파랑 / 주황) ── 고른 색은 이 폰에 기억한다
-function setColor(c) {
-  document.body.classList.toggle('orange', c === 'orange');
-  $('colBlue').classList.toggle('on', c !== 'orange');
-  $('colOrange').classList.toggle('on', c === 'orange');
-  try { localStorage.setItem('open.color', c); } catch (e) {}
-}
-{ let c = 'blue'; try { c = localStorage.getItem('open.color') || 'blue'; } catch (e) {} setColor(c); }
-$('colBlue').addEventListener('click', () => setColor('blue'));
-$('colOrange').addEventListener('click', () => setColor('orange'));
 
 // ── 호기 설정 ──
 // 쉼표·줄바꿈으로 나눈 이름들을 호기 목록으로 저장한다 (같은 이름은 하나로, 넣은 순서대로)
