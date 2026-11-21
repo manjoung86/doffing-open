@@ -240,7 +240,7 @@
       <div class="time num">
         <span class="hm" id="doffHM">--:--</span><span class="sec" id="doffSec"></span>
       </div>
-      <div class="sub num" id="doffSub">길이를 넣으세요</div>
+      <div class="sub num" id="doffSub">무게와 데니어를 넣으세요</div>
     </div>
     <div class="card form">
       <div class="row mcrow">
@@ -524,7 +524,10 @@ function inputStart(now) {
 function renderPreview(now) {
   $('nowText').textContent = hms(now);
   const len = parseNum($('len').value), spd = parseNum($('spd').value), start = inputStart(now);
-  const hint = !(len > 0) ? '길이를 넣으세요' : !(spd > 0) ? '속도를 넣으세요' : !start ? '시작 시각을 넣으세요' : '';
+  // 이 판은 무게·데니어로 길이를 채우므로, 길이가 비었으면 무게·데니어 중 빠진 것을 알려 준다 (길이를 직접 넣어도 된다)
+  const g = parseNum($('wgt').value) > 0, d = parseNum($('den').value) > 0;
+  const lenHint = g ? '데니어를 넣으세요' : d ? '무게를 넣으세요' : '무게와 데니어를 넣으세요';
+  const hint = !(len > 0) ? lenHint : !(spd > 0) ? '속도를 넣으세요' : !start ? '시작 시각을 넣으세요' : '';
   $('result').classList.toggle('empty', !!hint);
   $('goBtn').disabled = !!hint;
   if (hint) {
